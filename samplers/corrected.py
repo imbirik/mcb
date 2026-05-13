@@ -1,0 +1,1 @@
+from samplers.marginally_exact import MarginallyExactSampler as CorrectedSampler

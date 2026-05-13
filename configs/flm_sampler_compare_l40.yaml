@@ -1,0 +1,37 @@
+defaults:
+  - config
+  - _self_
+
+mode: sample_compare
+
+loader:
+  global_batch_size: 4
+  eval_global_batch_size: 4
+  batch_size: 1
+  eval_batch_size: 4
+  num_workers: 2
+
+sampling:
+  steps: 1024
+  num_sample_batches: 8
+  flm_sampler: ode
+  compare_samplers: [ode, sde, marginally_exact, q]
+  sde_noise_scale: 1.0  # multiplier on SI bridge noise for sde
+  q_t_act: 0.4
+  q_start_t: 0.6
+
+eval:
+  perplexity_batch_size: 2
+  mauve_batch_size: 2
+  mauve_max_text_length: 256
+  generated_samples_path: ${cwd:}/samples.json
+  sampler_compare_dir: ${cwd:}/sampler_compare
+  sampler_comparison_path: ${eval.sampler_compare_dir}/summary.json
+
+trainer:
+  devices: 1
+  num_nodes: 1
+
+hydra:
+  run:
+    dir: ./outputs/sampler_compare/${data.train}/${now:%Y.%m.%d}/${now:%H%M%S}

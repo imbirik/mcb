@@ -1,0 +1,59 @@
+defaults:
+  - _self_
+  - /data: openwebtext-split
+  - /model: small
+  - /prior: none
+  - /algo: flm
+
+mode: sample_compare  # sample_eval / sample_compare
+seed: 1
+
+loader:
+  global_batch_size: ${.eval_global_batch_size}
+  eval_global_batch_size: 8
+  batch_size: ${.eval_batch_size}
+  eval_batch_size: ${div_up:${.eval_global_batch_size}, ${eval:${trainer.devices} * ${trainer.num_nodes}}}
+  num_workers: 4
+  pin_memory: True
+
+sampling:
+  steps: [1024]
+  use_float64: True
+  flm_sampler: ode  # ode / sde (mean bridge) / marginally_exact / q
+  compare_samplers: [ode, sde, marginally_exact, q]
+  sde_noise_scale: 1.0  # multiplier on SI bridge noise for sde
+  q_t_act: 0.4
+  q_start_t: 0.6  # Legacy FLM-time switchpoint. Ignored when q_t_act is set.
+  p_nucleus: 1.0
+  marginally_exact_p_nucleus: 1.0
+  num_sample_batches: 1
+  temperature: 1.0
+  marginally_exact_temperature: 1.0
+
+training:
+  ema: 0.9999
+
+eval:
+  checkpoint_path: ""
+  disable_ema: False
+  compute_generative_perplexity: True
+  compute_mauve: True
+  perplexity_batch_size: 8
+  mauve_batch_size: 8
+  mauve_max_text_length: 256
+  mauve_featurize_model_name: gpt2-large
+  diversity_ngrams: [2, 3, 4]
+  gen_ppl_eval_model_name_or_path: gpt2-large
+  generated_samples_path: ${cwd:}/samples.json
+  sampler_compare_dir: ${cwd:}/sampler_compare
+  sampler_comparison_path: ${eval.sampler_compare_dir}/summary.json
+
+trainer:
+  num_nodes: 1
+  devices: ${device_count:}
+
+hydra:
+  run:
+    dir: ./outputs/${mode}/${data.train}/${now:%Y.%m.%d}/${now:%H%M%S}
+  job:
+    chdir: false
