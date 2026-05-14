@@ -1,6 +1,6 @@
 # Sampling from Flow Language Models via Marginal-Conditioned Bridges
 
-[![arXiv](https://img.shields.io/badge/arXiv-0000.00000-b31b1b.svg)](https://arxiv.org/abs/0000.00000)
+[![arXiv](https://img.shields.io/badge/arXiv-2605.13681-b31b1b.svg)](https://arxiv.org/abs/2605.13681)
 
 Official implementation of MCB sampler for flow language models, based on [david3684/flm](https://github.com/david3684/flm).
 
@@ -23,9 +23,9 @@ To reproduce the experiments, run notebooks in `notebooks/` folder.
 ### Reference
 ```
 @article{azangulov2026mcb,
-  title={Marginally Exact Bridge Sampling for Flow Language Models},
+  title={Sampling from Flow Language Models via Marginal-Conditioned Bridges},
   author={Iskander, Azangulov and Leo Zhang},
-  journal={arXiv preprint arXiv:0000.00000},
+  journal={arXiv preprint arXiv:2605.13681},
   year={2026}
 }
 ```
